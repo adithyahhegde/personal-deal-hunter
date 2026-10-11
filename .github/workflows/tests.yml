@@ -1,0 +1,23 @@
+name: Offline tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies if present
+        run: |
+          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+      - name: Run offline tests if present
+        run: |
+          if [ -d tests ]; then
+            python -m unittest discover -s tests -v
+          else
+            echo 'No test suite uploaded yet; scaffold only.'
+          fi
