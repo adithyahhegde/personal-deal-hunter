@@ -11,13 +11,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install dependencies if present
+      - name: Verify implementation present
         run: |
-          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
-      - name: Run offline tests if present
-        run: |
-          if [ -d tests ]; then
-            python -m unittest discover -s tests -v
-          else
-            echo 'No test suite uploaded yet; scaffold only.'
-          fi
+          test -s dealhunter.py
+          test -s community_hunter.py
+          test -s catalog_discovery.py
+          test -s requirements.txt
+          test -f tests/test_community_hunter.py
+          test -f tests/test_dealhunter.py
+          test -f tests/test_discovery.py
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run all offline tests
+        run: python -m unittest discover -s tests -v
